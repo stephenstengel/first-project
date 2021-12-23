@@ -1,8 +1,10 @@
 This well-named repository is a little test program that I made to try out making a GUI with gtk+ using glade and python.
 
 TODO:
-	Make a flashing disco background
 	Rickroll
+
+Done:
+	Make a flashing disco background
 
 MIT License
 Copyright (c) <2021> <stephen.stengel@cwu.edu>
