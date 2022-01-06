@@ -97,6 +97,7 @@ class Handler:
 		# ~ self.timeout_id = GLib.timeout_add(227, self.on_timeout, None)
 		# ~ self.timeout_id = GLib.timeout_add(152, self.on_timeout, None)
 		self.timeout_id = GLib.timeout_add(114, self.on_timeout, None)
+		# ~ self.timeout_id = GLib.timeout_add(87, self.on_timeout, None)
 
 	def stop_timer(self):
 		if self.timeout_id:
