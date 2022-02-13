@@ -6,7 +6,7 @@
 import gi
 gi.require_version("Gtk", "3.0")
 ##Gdk is needed to change background color, GLib is for setting a timer
-from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
+from gi.repository import Gtk, Gdk, GLib #, GdkPixbuf#GdkPixbuff is not needed now?! im confused!
 
 from os import kill
 import random
@@ -20,14 +20,20 @@ class Handler:
 	label1Angle = 0
 	timeout_id = None
 	playButtonPressCounter = 0
-	jigglypuffCounter = 0
-	whichJigglypuff = 0
-	
+	whichJigglypuffGif = 0
+	currentPath = ""
+
+	def __init__(self):
+		self.whichJigglypuffGif = -1
+		self.jigglypuff_increment()
+
 	def button1_clicked(self, button):
 		print("Start music button pressed!")
 		if self.myProcess is None:
 			self.myProcess = subprocess.Popen(["ogg123", "james-brown-dead.ogg", "-r", "-q"])
 			print("Process ID: " + str(self.myProcess.pid))
+			self.renderJigglypuffFrame()
+			self.jigglypuff_increment()
 		# ~ start_button.set_sensitive(False) ##Can use these things to toggle on/off
 		if self.playButtonPressCounter <= 10:
 			self.playButtonPressCounter += 1
@@ -44,8 +50,7 @@ class Handler:
 		# ~ jigglypuff.set_from_file("initial-image.png")
 		# ~ gtk_image_clear(jigglypuff)
 		# ~ Gtk.Image.clear(jigglypuff)
-		self.whichJigglypuff += 1
-		self.whichJigglypuff %= 5
+		# ~ self.jigglypuff_increment()
 	
 	def rave_button_clicked_cb(self, button):
 		print("Rave button clicked!")
@@ -55,7 +60,7 @@ class Handler:
 		
 
 	def on_timeout(self, *args, **kwargs):
-		self.jigglypuff_increment()
+		# ~ self.jigglypuff_increment() ################################################
 		if self.timeout_id is not None:
 			self.changeBackgroundColor()
 			return True
@@ -65,33 +70,21 @@ class Handler:
 
 	
 	def jigglypuff_increment(self):
-		self.jigglypuffCounter += 1
-		self.jigglypuffCounter %= 4
-		if self.whichJigglypuff == 0:
-			pathlol = "jigglypuff-pics/one/"
-		elif self.whichJigglypuff == 1:
-			pathlol = "jigglypuff-pics/two/"
-		elif self.whichJigglypuff == 2:
-			pathlol = "jigglypuff-pics/three/"
-		elif self.whichJigglypuff == 3:
-			pathlol = "jigglypuff-pics/four/"
-		elif self.whichJigglypuff == 4:
-			pathlol = "jigglypuff-pics/five/"
-		self.renderJigglypuffFrame(pathlol)
-			
-	def renderJigglypuffFrame(self, myPath):
-		if self.jigglypuffCounter == 0:
-			jigglypuff.set_from_file(myPath + "0.png")
-		elif self.jigglypuffCounter == 1:
-			jigglypuff.set_from_file(myPath + "1.png")
-		elif self.jigglypuffCounter == 2:
-			jigglypuff.set_from_file(myPath + "2.png")
-		elif self.jigglypuffCounter == 3:
-			jigglypuff.set_from_file(myPath + "3.png")
+		self.whichJigglypuffGif += 1
+		self.whichJigglypuffGif %= 5
+		pathlol = "jigglypuff-gifs/" + str(self.whichJigglypuffGif + 1) + ".gif"
+		
+		self.currentPath = pathlol
+		
+
+	def renderJigglypuffFrame(self):
+		myPath = self.currentPath
+		jigglypuff.set_from_file(myPath)
+		jigglypuff.show() ##########################Does this do anything?
 	
 	#copied from other thing
 	def start_timer(self):
-		# ~ self.timeout_id = GLib.timeout_add(100, self.on_timeout, None)
+		# ~ self.timeout_id = GLib.timeout_add(1000, self.on_timeout, None)
 		# ~ self.timeout_id = GLib.timeout_add(500, self.on_timeout, None)
 		# ~ self.timeout_id = GLib.timeout_add(455, self.on_timeout, None)
 		# ~ self.timeout_id = GLib.timeout_add(227, self.on_timeout, None)
@@ -174,11 +167,12 @@ window = builder.get_object("myWindow")
 # ~ window.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0, 0, 0, 1)) #depricated call
 
 jigglypuff = builder.get_object("Jigglypuff")
-# ~ Gtk.Image.clear(jigglypuff) #this is used up above to clear the jigglypuff object
 
-testGif = builder.get_object("test-gif")
-threeGif = GdkPixbuf.PixbufAnimation.new_from_file("3.gif")
-testGif.set_from_animation(threeGif)
+# ~ testGif = builder.get_object("test-gif")
+# ~ threeGif = GdkPixbuf.PixbufAnimation.new_from_file("3.gif")
+# ~ testGif.set_from_animation(threeGif)
+
+# ~ jigglypuff.set_from_file("jigglypuff-gifs/1.gif") #pixbuff not needed!
 
 window.connect("destroy", Gtk.main_quit)
 window.show_all()
