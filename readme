@@ -3,6 +3,7 @@ This well-named repository is a little test program that I made to try out makin
 Video demo: https://www.youtube.com/watch?v=jj_4So2DseI
 
 TODO:
+	Move window initialization from script to a function or class.
 	Typing noises
 	Rickroll
 	Stopping the music on pink should cause a secret event.
