@@ -133,7 +133,12 @@ class Handler:
 
 	#This updates the angle of the spinning text.
 	def spinText(self):
-		angleIncrement = 6 * self.playButtonPressCounter
+		adjustedCounter = None
+		if self.playButtonPressCounter == 0:
+			adjustedCounter = 1
+		else:
+			adjustedCounter = self.playButtonPressCounter
+		angleIncrement = 6 * adjustedCounter
 		self.label1Angle = (self.label1Angle - angleIncrement) % 360
 		label1.set_angle(self.label1Angle)
 
