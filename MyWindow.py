@@ -3,6 +3,7 @@
 #
 #  MyWindow.py
 #  
+#  MIT License
 #  Copyright 2022 Stephen Stengel <stephen.stengel@cwu.edu>
 #  
 
@@ -10,7 +11,6 @@
 
 import gi
 gi.require_version("Gtk", "3.0")
-##Gdk is needed to change background color, GLib is for setting a timer
 from gi.repository import Gtk
 
 from Handlers import Handlers
@@ -23,8 +23,6 @@ class MyWindow(Gtk.Window):
 		builder = Gtk.Builder()
 		builder.add_from_file("glade-button.glade")
 		
-		#I'm going to make a list of all the objects that Handlers()
-		#needs to know about.
 		jigglypuff = builder.get_object("Jigglypuff")
 		
 		start_button = builder.get_object("music_start")

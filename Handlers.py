@@ -3,8 +3,10 @@
 #
 #  Handlers.py
 #  
+#  MIT License
 #  Copyright 2022 Stephen Stengel <stephen.stengel@cwu.edu>
-#  
+#
+
 import gi
 gi.require_version("Gtk", "3.0")
 ##Gdk is needed to change background color, GLib is for setting a timer
@@ -28,15 +30,19 @@ class Handlers():
 	stop_button = None
 	label1 = None
 	window = None
+	is_deprecated_been_printed = False
 
-	#Initialize fields.
+
+	#Initialize some fields.
 	def __init__(self, jigglypuff, stop_button, label1, window):
 		self.whichJigglypuffGif = -1
 		self.jigglypuff_increment()
+
 		self.jigglypuff = jigglypuff
 		self.stop_button = stop_button
 		self.label1 = label1
 		self.window = window
+
 
 	#The event function for the play music button. It creates an ogg123
 	#process and saves the ID. Also, it starts playing a jigglypuff gif.
@@ -129,7 +135,14 @@ class Handlers():
 		else:
 			self.currentBrightness = 1.0
 
-		self.window.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(r, g, b, self.currentBrightness)) #depricated call
+		#depricated call
+		if not self.is_deprecated_been_printed:
+			print("\"override_background_color\" is depricated. " 
+					"Try to find the new way to do it.")
+			self.is_deprecated_been_printed = True
+		self.window.override_background_color(
+				Gtk.StateFlags.NORMAL,
+				Gdk.RGBA(r, g, b, self.currentBrightness))
 
 
 	#This updates the angle of the spinning text.
