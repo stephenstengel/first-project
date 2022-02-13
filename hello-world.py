@@ -1,7 +1,12 @@
-# ~ MIT License
-# ~ Copyright (c) <2021> <stephen.stengel@cwu.edu>
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+#  hello-world.py
 
-#This is a test program using glade and gtk through pygobject
+# MIT License
+# Copyright (c) <2021> <stephen.stengel@cwu.edu>
+
+# This is a test program using glade and gtk through pygobject
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -23,10 +28,15 @@ class Handler:
 	whichJigglypuffGif = 0
 	currentPath = ""
 
+
+	#Initialize fields.
 	def __init__(self):
 		self.whichJigglypuffGif = -1
 		self.jigglypuff_increment()
 
+
+	#The event function for the play music button. It creates an ogg123
+	#process and saves the ID. Also, it starts playing a jigglypuff gif.
 	def button1_clicked(self, button):
 		print("Start music button pressed!")
 		if self.myProcess is None:
@@ -34,11 +44,16 @@ class Handler:
 			print("Process ID: " + str(self.myProcess.pid))
 			self.renderJigglypuffFrame()
 			self.jigglypuff_increment()
-		# ~ start_button.set_sensitive(False) ##Can use these things to toggle on/off
-		if self.playButtonPressCounter <= 10:
-			self.playButtonPressCounter += 1
+
+		#Increase spinny speed if pressed multiple times. Name change might be prudent.?
+		if self.playButtonPressCounter == 0:
 			self.start_timer()
-		
+		self.playButtonPressCounter += 1
+		stop_button.set_sensitive(True)
+
+
+	#The event function for the stop music button. It stops the music
+	#and hides jigglypuff.
 	def music_stop_clicked_cb(self, button):
 		print("Stop button pressed!")
 		if self.myProcess is not None:
@@ -47,99 +62,84 @@ class Handler:
 			self.myProcess = None
 		self.stop_timer()
 		self.playButtonPressCounter = 0
-		# ~ jigglypuff.set_from_file("initial-image.png")
-		# ~ gtk_image_clear(jigglypuff)
-		# ~ Gtk.Image.clear(jigglypuff)
-		# ~ self.jigglypuff_increment()
-	
+		Gtk.Image.clear(jigglypuff)
+		stop_button.set_sensitive(False)
+
+
+	#The rave button!!!!!!!1 WOOOOOOOOOO!!!1!+shift1!!!
 	def rave_button_clicked_cb(self, button):
 		print("Rave button clicked!")
 		self.changeBackgroundColor()
-		# ~ self.start_timer()
-		# ~ self.jigglypuff_increment()
+		self.spinText()
 		
 
+	#The function that is called when the timer times out.
 	def on_timeout(self, *args, **kwargs):
-		# ~ self.jigglypuff_increment() ################################################
 		if self.timeout_id is not None:
 			self.changeBackgroundColor()
+			self.spinText()
 			return True
 		else:
 			return False
 
 
-	
+	#Increments the jigglypuff gif that will be played.
 	def jigglypuff_increment(self):
 		self.whichJigglypuffGif += 1
 		self.whichJigglypuffGif %= 5
-		pathlol = "jigglypuff-gifs/" + str(self.whichJigglypuffGif + 1) + ".gif"
-		
-		self.currentPath = pathlol
-		
+		self.currentPath = "jigglypuff-gifs/" + str(self.whichJigglypuffGif + 1) + ".gif"
 
+
+	#Play the current jigglypuff gif.
 	def renderJigglypuffFrame(self):
 		myPath = self.currentPath
 		jigglypuff.set_from_file(myPath)
-		jigglypuff.show() ##########################Does this do anything?
-	
-	#copied from other thing
-	def start_timer(self):
-		# ~ self.timeout_id = GLib.timeout_add(1000, self.on_timeout, None)
-		# ~ self.timeout_id = GLib.timeout_add(500, self.on_timeout, None)
-		# ~ self.timeout_id = GLib.timeout_add(455, self.on_timeout, None)
-		# ~ self.timeout_id = GLib.timeout_add(227, self.on_timeout, None)
-		# ~ self.timeout_id = GLib.timeout_add(152, self.on_timeout, None)
-		self.timeout_id = GLib.timeout_add(114, self.on_timeout, None)
-		# ~ self.timeout_id = GLib.timeout_add(87, self.on_timeout, None)
 
+
+	#Starts the rave color changing timer. I used 114ms because it
+	#matches up with the music.
+	def start_timer(self):
+		self.timeout_id = GLib.timeout_add(114, self.on_timeout, None)
+
+
+	#Stops the rave timer. Called from music_stop_clicked_cb()
 	def stop_timer(self):
 		if self.timeout_id:
 			GLib.source_remove(self.timeout_id)
 			self.timeout_id = None
-		Gtk.Image.clear(jigglypuff)
-		Gtk.Image.clear(jigglypuff)
-		Gtk.Image.clear(jigglypuff)
-		Gtk.Image.clear(jigglypuff)
-		
-	def myWindow_key_press_event(self, a, b):
-		# ~ print("a: " + str(a))
-		# ~ print("b: " + str(b))
-		# ~ print("window: " + str(window))
-		# ~ a: <Gtk.Window object at 0x7f69c57c1f30 (GtkWindow at 0x2564280)>
-		# ~ b: <Gdk.EventKey object at 0x7f69c57bdef8 (void at 0x277c460)>
-		# ~ window: <Gtk.Window object at 0x7f69c57c1f30 (GtkWindow at 0x2564280)>
 
+
+	#Changes the background color whenever you type on the keyboard.
+	def myWindow_key_press_event(self, a, b):
 		print("key-press-event has happened!")
 		self.changeBackgroundColor()
+		self.spinText()
 
 
+	#This function picks a random background color to change to and
+	#changes to it. I made sure to alternate between light and dark with
+	#every call to give more strobe effect.
 	def changeBackgroundColor(self):
 		r, g, b = random.random(), random.random(), random.random()
 		if self.currentBrightness == 1.0:
 			self.currentBrightness = 0.5
 		else:
 			self.currentBrightness = 1.0
-		
-		#change angle too lol
-		# ~ self.label1Angle = (self.label1Angle - 22.5) % 360
-		self.label1Angle = (self.label1Angle - 6) % 360
+
+		theWindowLol = builder.get_object("myWindow")
+		theWindowLol.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(r, g, b, self.currentBrightness)) #depricated call
+		# ~ print(dir(theWindowLol.props))
+
+
+	#This updates the angle of the spinning text.
+	def spinText(self):
+		angleIncrement = 6 * self.playButtonPressCounter
+		self.label1Angle = (self.label1Angle - angleIncrement) % 360
 		label1.set_angle(self.label1Angle)
 
-		##Need to get window or builder better.
-		theWindowLol = builder.get_object("myWindow")
-		# ~ print(dir(theWindowLol.props))
-		
-		theWindowLol.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(r, g, b, self.currentBrightness)) #depricated call
-		# ~ window.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(r, g, b, self.currentBrightness)) #depricated call
-		# ~ print("currentBrightness: " + str(self.currentBrightness))
-		
-		
-		
-		
 
-# ~ widget = Gtk.Box()
-# ~ print(dir(widget.props))
-
+#The main startup bit. I don't know how to put it into a function yet.
+#The call to Handler() keeps being recursive.
 builder = Gtk.Builder()
 builder.add_from_file("glade-button.glade")
 builder.connect_signals(Handler())
@@ -149,31 +149,18 @@ start_button.set_label("Play the music!")
 
 stop_button = builder.get_object("music_stop")
 stop_button.set_label("Stop the music!")
+stop_button.set_sensitive(False)
 
 rave_button = builder.get_object("rave_button")
 rave_button.set_label("Change color!")
 
-# ~ draw_area = builder.get_object("draw_area")
-# ~ vol_slider = builder.get_object("volume_slider")
-# ~ vol_slider.set_label("Volume! It isn't connected to anything yet.")
-
 label1 = builder.get_object("label1")
-# ~ label1.set_angle(0)
-# ~ label1.set_label("Test label!")
-
-myViewport = builder.get_object("myViewport")
 
 window = builder.get_object("myWindow")
-# ~ window.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0, 0, 0, 1)) #depricated call
 
 jigglypuff = builder.get_object("Jigglypuff")
 
-# ~ testGif = builder.get_object("test-gif")
-# ~ threeGif = GdkPixbuf.PixbufAnimation.new_from_file("3.gif")
-# ~ testGif.set_from_animation(threeGif)
-
-# ~ jigglypuff.set_from_file("jigglypuff-gifs/1.gif") #pixbuff not needed!
-
 window.connect("destroy", Gtk.main_quit)
 window.show_all()
+
 Gtk.main()

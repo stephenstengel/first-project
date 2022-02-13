@@ -5,6 +5,8 @@ Video demo: https://www.youtube.com/watch?v=jj_4So2DseI
 TODO:
 	Typing noises
 	Rickroll
+	Stopping the music on pink should cause a secret event.
+	Allow any number of gifs automatically. (AKA get rid of hard coded numbers.)
 
 Done:
 	Make a flashing disco background
