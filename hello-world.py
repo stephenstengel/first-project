@@ -6,7 +6,7 @@
 import gi
 gi.require_version("Gtk", "3.0")
 ##Gdk is needed to change background color, GLib is for setting a timer
-from gi.repository import Gtk, Gdk, GLib 
+from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
 
 from os import kill
 import random
@@ -161,7 +161,7 @@ rave_button = builder.get_object("rave_button")
 rave_button.set_label("Change color!")
 
 # ~ draw_area = builder.get_object("draw_area")
-vol_slider = builder.get_object("volume_slider")
+# ~ vol_slider = builder.get_object("volume_slider")
 # ~ vol_slider.set_label("Volume! It isn't connected to anything yet.")
 
 label1 = builder.get_object("label1")
@@ -174,7 +174,11 @@ window = builder.get_object("myWindow")
 # ~ window.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0, 0, 0, 1)) #depricated call
 
 jigglypuff = builder.get_object("Jigglypuff")
+# ~ Gtk.Image.clear(jigglypuff) #this is used up above to clear the jigglypuff object
 
+testGif = builder.get_object("test-gif")
+threeGif = GdkPixbuf.PixbufAnimation.new_from_file("3.gif")
+testGif.set_from_animation(threeGif)
 
 window.connect("destroy", Gtk.main_quit)
 window.show_all()
