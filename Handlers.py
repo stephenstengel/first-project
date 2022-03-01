@@ -74,6 +74,14 @@ class Handlers():
 		Gtk.Image.clear(self.jigglypuff)
 		self.stop_button.set_sensitive(False)
 
+	#This is used to stop the music from playing if the user closes the window during playback.
+	def music_stop_on_destroy(self, button):
+		print("Exit window button pressed!")
+		if self.myProcess is not None:
+			print("Killing this process: " + str(self.myProcess.pid))
+			kill(self.myProcess.pid, signal.SIGKILL)
+			self.myProcess = None
+
 
 	#The rave button!!!!!!!1 WOOOOOOOOOO!!!1!+shift1!!!
 	def rave_button_clicked_cb(self, button):
