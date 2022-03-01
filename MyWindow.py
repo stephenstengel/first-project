@@ -38,8 +38,9 @@ class MyWindow(Gtk.Window):
 		label1 = builder.get_object("label1")
 		
 		window = builder.get_object("myWindow")
+		window.connect("destroy", Handlers.myDestroy)
 		window.connect("destroy", Gtk.main_quit)
-		
+
 		myHandlers = Handlers(jigglypuff, stop_button, label1, window)
 		builder.connect_signals(myHandlers)
 		
