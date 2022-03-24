@@ -8,6 +8,10 @@
 
 # This is a test program using glade and gtk through pygobject
 
+#TODO: Figure out why it goes transparent every two color flashes.
+#	I've found that this error only occurs when I use gnome-terminal to run hello-world.py
+
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
