@@ -17,6 +17,9 @@ import random
 import subprocess
 import signal
 
+import pygame.mixer as mixer
+
+
 #exitProcess global variable is used to make sure that the music process gets killed when the window is closed.
 #It is set to a value at the same time as self.myProcess.
 #It is only read when the exit window button is pressed and the Gtk.main_quit function is about to be called.
@@ -25,7 +28,7 @@ exitProcess = None
 
 class Handlers():
 	myProcess = None
-	currentBrightness = 1.0
+	is_bright_phase = False
 	flashCount = 0
 	label1Angle = 0
 	timeout_id = None
@@ -37,10 +40,13 @@ class Handlers():
 	label1 = None
 	window = None
 	is_deprecated_been_printed = False
+	is_playing = False
 
 
 	#Initialize some fields.
 	def __init__(self, jigglypuff, stop_button, label1, window):
+		mixer.init()
+		mixer.music.load("james-brown-dead.ogg")
 		self.whichJigglypuffGif = -1
 		self.jigglypuff_increment()
 
@@ -54,14 +60,11 @@ class Handlers():
 	#process and saves the ID. Also, it starts playing a jigglypuff gif.
 	def button1_clicked(self, button):
 		print("Start music button pressed!")
-		if self.myProcess is None:
-			self.myProcess = subprocess.Popen(["ogg123", "james-brown-dead.ogg", "-r", "-q"])
-			print("Process ID: " + str(self.myProcess.pid))
+		if self.is_playing is False:
+			mixer.music.play(loops = -1)
 			self.renderJigglypuffFrame()
 			self.jigglypuff_increment()
-			#Hack to get exit to stop the music
-			global exitProcess
-			exitProcess = self.myProcess
+			self.is_playing = True
 
 		#Increase spinny speed if pressed multiple times. Name change might be prudent.?
 		if self.playButtonPressCounter == 0:
@@ -74,14 +77,12 @@ class Handlers():
 	#and hides jigglypuff.
 	def music_stop_clicked_cb(self, button):
 		print("Stop button pressed!")
-		if self.myProcess is not None:
-			print("Killing this process: " + str(self.myProcess.pid))
-			kill(self.myProcess.pid, signal.SIGKILL)
-			self.myProcess = None
+		mixer.music.stop()
 		self.stop_timer()
 		self.playButtonPressCounter = 0
 		Gtk.Image.clear(self.jigglypuff)
 		self.stop_button.set_sensitive(False)
+		self.is_playing = False
 
 
 	#This is used to stop the music from playing if the user closes the window during playback.
@@ -148,10 +149,19 @@ class Handlers():
 	#every call to give more strobe effect.
 	def changeBackgroundColor(self):
 		r, g, b = random.random(), random.random(), random.random()
-		if self.currentBrightness == 1.0:
-			self.currentBrightness = 0.5
+		if self.is_bright_phase == False:
+			#Set the color to be a little darker
+			r = r - (r / 2)
+			g = g - (g / 2)
+			b = b - (b / 2)
+			self.is_bright_phase = True
+			
 		else:
-			self.currentBrightness = 1.0
+			#set the color to be a little brighter
+			r = ((1 - r) / 2) + r
+			g = ((1 - g) / 2) + g
+			b = ((1 - b) / 2) + b
+			self.is_bright_phase = False
 
 		#depricated call
 		if not self.is_deprecated_been_printed:
@@ -160,7 +170,7 @@ class Handlers():
 			self.is_deprecated_been_printed = True
 		self.window.override_background_color(
 				Gtk.StateFlags.NORMAL,
-				Gdk.RGBA(r, g, b, self.currentBrightness))
+				Gdk.RGBA(r, g, b, 1)) #Opacity should never change.
 
 
 	#This updates the angle of the spinning text.
