@@ -8,3 +8,10 @@ Dependencies required if installing from pip:
 	Then run:
 		pip3 install pycairo
 		pip3 install PyGObject
+
+https://python-gtk-3-tutorial.readthedocs.io/en/latest/dialogs.html#filechooserdialog
+You can specify to choose a folder.
+
+https://python-gtk-3-tutorial.readthedocs.io/en/latest/index.html
+
+https://stackoverflow.com/questions/29979957/how-to-make-filename-path-from-gtk-python-3-4-filechooserdialog-accessible-gl

@@ -77,6 +77,9 @@
               <object class="GtkImage" id="Jigglypuff">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="double-buffered">False</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>

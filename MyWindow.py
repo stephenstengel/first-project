@@ -45,3 +45,52 @@ class MyWindow(Gtk.Window):
 		builder.connect_signals(myHandlers)
 		
 		window.show_all()
+
+
+#this code taken from here:
+# ~ https://stackoverflow.com/questions/29979957/how-to-make-filename-path-from-gtk-python-3-4-filechooserdialog-accessible-gl
+#I'll make my own later
+class FileChooser():
+
+	def __init__(self):
+		#Stores your path
+		self.path = None
+
+		dia = Gtk.FileChooserDialog("Please choose a file", None,
+			Gtk.FileChooserAction.OPEN,
+			(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+			 Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+
+		self.add_filters(dia)
+
+		response = dia.run()
+
+		if response == Gtk.ResponseType.OK:
+			print("Open clicked")
+			print("File selected: " + dia.get_filename())
+			self.path = dia.get_filename()
+		elif response == Gtk.ResponseType.CANCEL:
+			print("Cancel clicked")
+
+		dia.destroy()
+
+	def add_filters(self, dia):
+		filter_any = Gtk.FileFilter()
+		filter_any.set_name("Any files")
+		filter_any.add_pattern("*")
+		dia.add_filter(filter_any)
+
+		filter_text = Gtk.FileFilter()
+		filter_text.set_name('Text files')
+		filter_text.add_mime_type('text/plain')
+		dia.add_filter(filter_text)
+
+		filter_py = Gtk.FileFilter()
+		filter_py.set_name('Python files')
+		filter_py.add_mime_type('text/x-python')
+		dia.add_filter(filter_py)
+
+		filter_img = Gtk.FileFilter()
+		filter_img.set_name('Image')
+		filter_img.add_mime_type('image/*')
+		dia.add_filter(filter_img)

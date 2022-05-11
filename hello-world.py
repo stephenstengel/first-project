@@ -18,10 +18,17 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from MyWindow import MyWindow
+from MyWindow import FileChooser
 
 
 def main(args):
+	testChooser = FileChooser()
+	
+	print("contents of testChooser: " + str(testChooser))
+	print("contents of testChooser.path: " + str(testChooser.path))
 	theWindow = MyWindow()
+	
+	
 	Gtk.main()
 	
 	return 0
