@@ -65,6 +65,7 @@ class Handlers():
 			self.renderJigglypuffFrame()
 			self.jigglypuff_increment()
 			self.is_playing = True
+			self.changeBackgroundColor()
 
 		#Increase spinny speed if pressed multiple times. Name change might be prudent.?
 		if self.playButtonPressCounter == 0:
