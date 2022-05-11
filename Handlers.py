@@ -103,6 +103,7 @@ class Handlers():
 		
 
 	#The function that is called when the timer times out.
+	#kwargs doesn't seem to do anything. I don't know why it is there.
 	def on_timeout(self, *args, **kwargs):
 		if self.timeout_id is not None:
 			self.changeBackgroundColor()
